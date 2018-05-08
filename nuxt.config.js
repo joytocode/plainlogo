@@ -38,5 +38,11 @@ exports.build = {
   vendor: [
     // Only keep common vendor modules here
     'vuetify', 'vee-validate', 'vue-async-computed', 'opentype.js'
-  ]
+  ],
+  extend (config) {
+    // Disable UglifyJs until https://github.com/mishoo/UglifyJS2/issues/2842 is resolved
+    config.plugins = config.plugins.filter((plugin) => plugin.constructor.name !== 'UglifyJsPlugin')
+  }
 }
+
+exports.router = process.env.DEPLOY_ENV === 'GH_PAGES' ? { base: '/plainlogo/' } : {}

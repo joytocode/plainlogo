@@ -6,7 +6,8 @@
   "author": "JoyToCode <team@joytocode.com>",
   "license": "MIT",
   "scripts": {
-    "start": "cross-env HOST=0.0.0.0 PORT=4000 nuxt"
+    "start": "cross-env HOST=0.0.0.0 PORT=4000 nuxt",
+    "build": "cross-env DEPLOY_ENV=GH_PAGES nuxt generate"
   },
   "dependencies": {
     "nuxt": "^1.4.0",
