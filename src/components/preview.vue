@@ -1,9 +1,16 @@
 <template>
   <div>
     <h1>Preview</h1>
-    <div ref="svgLogo" class="svg-container" v-html="svg"/>
-    <v-btn color="primary" @click="download">Download</v-btn>
-    <v-dialog v-model="dialog" :width="2 * params.width">
+    <div
+      ref="svgLogo"
+      class="svg-container"
+      v-html="svg"/>
+    <v-btn
+      color="primary"
+      @click="download">Download</v-btn>
+    <v-dialog
+      v-model="dialog"
+      :width="2 * params.width">
       <v-card>
         <v-card-title
           class="pb-0"
@@ -11,10 +18,16 @@
           <div class="headline">Download</div>
         </v-card-title>
         <v-card-text class="py-0 text-xs-center">
-          <img :src="pngLogo" />
-          <a :href="pngLogo" :download="`${params.name}.png`" style="display: block;">PNG</a>
-          <img :src="svgAsXml" />
-          <a :href="svgAsXml" :download="`${params.name}.svg`" style="display: block;">SVG</a>
+          <img :src="pngLogo" >
+          <a
+            :href="pngLogo"
+            :download="`${params.name}.png`"
+            style="display: block;">PNG</a>
+          <img :src="svgAsXml" >
+          <a
+            :href="svgAsXml"
+            :download="`${params.name}.svg`"
+            style="display: block;">SVG</a>
         </v-card-text>
         <v-card-actions>
           <v-spacer/>
@@ -59,7 +72,7 @@ export default {
       const textX = (width - textSize.width) / 2
       const textY = (height - textSize.height) / 2 + textSize.upHeight
       const textPath = font.getPath(name, textX, textY, fontSize)
-      textPath.fill = textColor
+      textPath.fill = this.normalizeColor(textColor)
       svgPaths.push(textPath.toSVG())
       return `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}">${svgPaths.join('')}</svg>`
     }
@@ -92,6 +105,9 @@ export default {
       const upHeight = -bbox.y1
       const downHeight = bbox.y2
       return { width: bbox.x2 - bbox.x1, height: upHeight + downHeight, upHeight, downHeight }
+    },
+    normalizeColor (color) {
+      return color.indexOf('#') ? `#${color}` : color
     },
     download () {
       const { width, height } = this.params

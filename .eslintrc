@@ -1,0 +1,9 @@
+{
+  "extends": [
+    "standard",
+    "plugin:vue/recommended"
+  ],
+  "parserOptions": {
+    "ecmaVersion": 2017
+  }
+}

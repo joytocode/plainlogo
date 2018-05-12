@@ -12,7 +12,7 @@ exports.loading = {
 exports.head = {
   titleTemplate: '%s - PlainLogo',
   meta: [
-    { charset: 'utf-8' },
+    { charset: 'utf-8' }
   ],
   link: [
     { rel: 'stylesheet', type: 'text/css', href: 'https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons' }
@@ -40,8 +40,16 @@ exports.build = {
     'vuetify', 'vee-validate', 'vue-async-computed', 'opentype.js'
   ],
   extend (config) {
-    // Disable UglifyJs until https://github.com/mishoo/UglifyJS2/issues/2842 is resolved
-    config.plugins = config.plugins.filter((plugin) => plugin.constructor.name !== 'UglifyJsPlugin')
+    // inline >= 2 will cause errors https://github.com/mishoo/UglifyJS2/issues/2842
+    config.plugins.forEach((plugin) => {
+      if (plugin.constructor.name !== 'UglifyJsPlugin') {
+        return
+      }
+      plugin.options.uglifyOptions.compress = {
+        ...(plugin.options.uglifyOptions.compress || {}),
+        inline: 1
+      }
+    })
   }
 }
 

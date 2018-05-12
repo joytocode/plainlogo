@@ -1,6 +1,8 @@
 <template>
   <div>
-    <v-card class="mb-2" raised>
+    <v-card
+      class="mb-2"
+      raised>
       <v-card-title
         class="pb-0"
         primary-title>
@@ -48,15 +50,17 @@
       </v-card-actions>
     </v-card>
     <no-ssr>
-      <preview :params="params" font-name="InknutAntiqua-Bold"/>
+      <preview
+        :params="params"
+        font-name="InknutAntiqua-Bold"/>
     </no-ssr>
   </div>
 </template>
 
 <script>
-const getInitialParams = () => ({
+const getDefaultParams = () => ({
   name: 'PlainLogo',
-  textColor: '#EDB050',
+  textColor: 'EDB050',
   width: 400,
   height: 300,
   padding: 20
@@ -69,14 +73,40 @@ export default {
   components: {
     'preview': require('~/components/preview').default
   },
+  props: {
+    initialParams: {
+      type: Object,
+      required: true
+    }
+  },
   data () {
     return {
-      params: getInitialParams()
+      params: {
+        ...getDefaultParams(),
+        ...this.initialParams
+      }
     }
+  },
+  watch: {
+    params: {
+      handler (value) {
+        this.$emit('paramsChange', { params: value })
+      },
+      deep: true
+    }
+  },
+  mounted () {
+    this.$emit('paramsChange', { params: this.params, first: true })
   },
   methods: {
     reset () {
-      this.params = getInitialParams()
+      this.params = getDefaultParams()
+    },
+    setParams (params) {
+      this.params = {
+        ...getDefaultParams(),
+        ...params
+      }
     }
   }
 }
