@@ -10,12 +10,12 @@ exports.loading = {
 }
 
 exports.head = {
-  titleTemplate: '%s - PlainLogo',
   meta: [
     { charset: 'utf-8' }
   ],
   link: [
-    { rel: 'stylesheet', type: 'text/css', href: 'https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons' }
+    { rel: 'stylesheet', type: 'text/css', href: 'https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons' },
+    { rel: 'stylesheet', type: 'text/css', href: 'https://use.fontawesome.com/releases/v5.0.13/css/all.css', integrity: 'sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp', crossorigin: 'anonymous' }
   ]
 }
 
@@ -37,7 +37,7 @@ exports.build = {
   extractCSS: true,
   vendor: [
     // Only keep common vendor modules here
-    'vuetify', 'vee-validate', 'vue-async-computed', 'opentype.js'
+    'vuetify', 'vee-validate', 'vue-async-computed', 'opentype.js', 'vue-color', 'color-string'
   ],
   extend (config) {
     // inline >= 2 will cause errors https://github.com/mishoo/UglifyJS2/issues/2842

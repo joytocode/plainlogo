@@ -52,7 +52,7 @@
     <no-ssr>
       <preview
         :params="params"
-        font-name="InknutAntiqua-Bold"/>
+        font-name="InknutAntiqua"/>
     </no-ssr>
   </div>
 </template>
