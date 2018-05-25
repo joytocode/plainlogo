@@ -11,7 +11,7 @@
     "start": "cross-env HOST=0.0.0.0 PORT=4000 nuxt",
     "build": "cross-env DEPLOY_ENV=GH_PAGES nuxt generate",
     "deploy": "gh-pages -d dist --dotfiles -m \"Updated by $(git rev-parse HEAD | cut -c 1-8)\"",
-    "deploy:ci": "gh-pages --repo https://$GH_TOKEN@github.com:joytocode/plainlogo.git -d dist --dotfiles -m \"Updated by $(git rev-parse HEAD | cut -c 1-8)\""
+    "deploy:ci": "gh-pages --repo https://$GH_TOKEN@github.com/joytocode/plainlogo.git -d dist --dotfiles -m \"Updated by $(git rev-parse HEAD | cut -c 1-8)\""
   },
   "dependencies": {
     "axios": "^0.18.0",
