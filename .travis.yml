@@ -1,0 +1,17 @@
+sudo: false
+language: node_js
+branches:
+  only:
+  - master
+os:
+  - linux
+node_js:
+  - "8"
+before_install:
+  - '[[ $(node -v) =~ ^v9.*$ ]] || npm install -g npm@latest'
+install:
+  - npm install
+script:
+  - npm run build
+after_success:
+  - npm run deploy:ci
