@@ -2,7 +2,8 @@
   <div>
     <div
       v-if="svg"
-      v-html="svg"/>
+      v-html="svg"
+    />
   </div>
 </template>
 
@@ -12,6 +13,10 @@ import { renderSVG } from '~/utils/renderer'
 export default {
   props: {
     size: {
+      type: Object,
+      default: null
+    },
+    resources: {
       type: Object,
       default: null
     },
@@ -27,7 +32,17 @@ export default {
       }
       return renderSVG({
         ...this.size,
-        ...this.params
+        ...this.params,
+        texts: this.params.texts.map((text) => {
+          const fontItem = this.resources.fontList.itemByFamily[text.font.name]
+          return {
+            ...text,
+            font: {
+              url: fontItem.files[text.font.style],
+              scale: text.font.scale
+            }
+          }
+        })
       })
     }
   }

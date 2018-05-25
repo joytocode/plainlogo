@@ -1,21 +1,25 @@
 <template>
-  <div class="input-group input-group--dirty input-group--text-field">
-    <label v-if="label">{{ label }}</label>
+  <div>
+    <label
+      v-if="label"
+      class="subheading grey--text text--darken-2"
+    >{{ label }}</label>
     <no-ssr>
-      <sketch-picker
+      <chrome-picker
         :value="value"
-        :class="`${label ? 'mt-2' : ''} mb-4`"
-        @input="updateValue"/>
+        class="mt-2 mb-4"
+        @input="updateValue"
+      />
     </no-ssr>
   </div>
 </template>
 
 <script>
-import colorString from 'color-string'
+import { rgbaToHex } from '~/utils/color'
 
 export default {
   components: {
-    'sketch-picker': require('vue-color').Sketch
+    'chrome-picker': require('vue-color').Chrome
   },
   props: {
     label: {
@@ -29,8 +33,7 @@ export default {
   },
   methods: {
     updateValue (value) {
-      const color = colorString.to.hex([value.rgba.r, value.rgba.g, value.rgba.b, value.rgba.a]).substring(1)
-      this.$emit('input', color)
+      this.$emit('input', rgbaToHex(value.rgba))
     }
   }
 }

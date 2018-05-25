@@ -1,11 +1,16 @@
+require('dotenv').config()
 const path = require('path')
 
 exports.rootDir = __dirname
 
 exports.srcDir = path.join(__dirname, 'src')
 
+exports.env = {
+  GOOGLE_API_KEY: process.env.GOOGLE_API_KEY
+}
+
 exports.loading = {
-  color: '#81A07C',
+  color: '#F9944D',
   height: '3px'
 }
 
@@ -26,7 +31,8 @@ exports.css = [
 exports.plugins = [
   path.join(__dirname, 'src/plugins/vuetify'),
   path.join(__dirname, 'src/plugins/vee-validate'),
-  path.join(__dirname, 'src/plugins/vue-async-computed')
+  path.join(__dirname, 'src/plugins/vue-async-computed'),
+  { src: path.join(__dirname, 'src/plugins/blob'), ssr: false }
 ]
 
 exports.serverMiddleware = [
@@ -37,7 +43,8 @@ exports.build = {
   extractCSS: true,
   vendor: [
     // Only keep common vendor modules here
-    'vuetify', 'vee-validate', 'vue-async-computed', 'opentype.js', 'vue-color', 'color-string'
+    'axios', 'blob-polyfill', 'blueimp-canvas-to-blob', 'change-case', 'color-string', 'file-saver', 'js-base64',
+    'lodash.debounce', 'opentype.js', 'qs', 'vee-validate', 'vue-async-computed', 'vue-color', 'vuetify'
   ],
   extend (config) {
     // inline >= 2 will cause errors https://github.com/mishoo/UglifyJS2/issues/2842

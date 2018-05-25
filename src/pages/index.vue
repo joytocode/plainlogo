@@ -4,7 +4,8 @@
       v-if="initialParams"
       ref="editor"
       :initial-params="initialParams"
-      @paramsChange="updateParams"/>
+      @paramsChange="updateParams"
+    />
   </v-container>
 </template>
 

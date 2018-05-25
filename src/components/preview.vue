@@ -4,36 +4,43 @@
     <div
       ref="svgLogo"
       class="svg-container"
-      v-html="svg"/>
+      v-html="svg"
+    />
     <v-btn
       color="primary"
-      @click="download">Download</v-btn>
+      @click="download"
+    >Download</v-btn>
     <v-dialog
       v-model="dialog"
-      :width="2 * params.width">
+      :width="2 * params.width"
+    >
       <v-card>
         <v-card-title
           class="pb-0"
-          primary-title>
+          primary-title
+        >
           <div class="headline">Download</div>
         </v-card-title>
         <v-card-text class="py-0 text-xs-center">
-          <img :src="pngLogo" >
+          <img :src="pngLogo">
           <a
             :href="pngLogo"
             :download="`${params.name}.png`"
-            style="display: block;">PNG</a>
-          <img :src="svgAsXml" >
+            style="display: block;"
+          >PNG</a>
+          <img :src="svgAsXml">
           <a
             :href="svgAsXml"
             :download="`${params.name}.svg`"
-            style="display: block;">SVG</a>
+            style="display: block;"
+          >SVG</a>
         </v-card-text>
         <v-card-actions>
           <v-spacer/>
           <v-btn
             flat
-            @click="dialog = false">Close</v-btn>
+            @click="dialog = false"
+          >Close</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>

@@ -2,10 +2,12 @@
   <div>
     <v-card
       class="mb-2"
-      raised>
+      raised
+    >
       <v-card-title
         class="pb-0"
-        primary-title>
+        primary-title
+      >
         <div class="headline">Settings</div>
       </v-card-title>
       <v-card-text class="py-0">
@@ -15,44 +17,51 @@
             v-model="params.name"
             :error-messages="errors.collect('name')"
             name="name"
-            label="Name"/>
+            label="Name"
+          />
           <v-text-field
             v-validate="'required'"
             v-model="params.textColor"
             :error-messages="errors.collect('textColor')"
             name="textColor"
-            label="Text Color"/>
+            label="Text Color"
+          />
           <v-text-field
             v-validate="'required'"
             v-model="params.width"
             :error-messages="errors.collect('width')"
             name="width"
-            label="Width"/>
+            label="Width"
+          />
           <v-text-field
             v-validate="'required'"
             v-model="params.height"
             :error-messages="errors.collect('height')"
             name="height"
-            label="Height"/>
+            label="Height"
+          />
           <v-text-field
             v-validate="'required'"
             v-model="params.padding"
             :error-messages="errors.collect('padding')"
             name="padding"
-            label="Padding"/>
+            label="Padding"
+          />
         </v-form>
       </v-card-text>
       <v-card-actions>
         <v-spacer/>
         <v-btn
           flat
-          @click="reset">Reset</v-btn>
+          @click="reset"
+        >Reset</v-btn>
       </v-card-actions>
     </v-card>
     <no-ssr>
       <preview
         :params="params"
-        font-name="InknutAntiqua"/>
+        font-name="InknutAntiqua"
+      />
     </no-ssr>
   </div>
 </template>

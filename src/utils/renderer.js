@@ -1,9 +1,10 @@
-import { loadFont } from './font'
+import { loadFontByUrl } from '~/utils/font'
+import { normalizeColor } from '~/utils/color'
 
 export async function renderSVG (renderOptions) {
   const options = {
     ...renderOptions,
-    fonts: await Promise.all(renderOptions.texts.map((text) => loadFont(text.font)))
+    fonts: await Promise.all(renderOptions.texts.map((text) => loadFontByUrl(text.font.url)))
   }
   const { width, height, texts, fonts, background } = options
   const svgPaths = []
@@ -17,7 +18,7 @@ export async function renderSVG (renderOptions) {
   texts.forEach((text, index) => {
     const font = fonts[index]
     const textSize = textSizes[index]
-    const textPath = font.getPath(text.value, textX, textY, fontSize)
+    const textPath = font.getPath(text.value, textX, textY, fontSize * getFontScale(text))
     textPath.fill = normalizeColor(text.color)
     svgPaths.push(textPath.toSVG())
     textX += textSize.width + spacing
@@ -54,7 +55,7 @@ function measureTextSizes (fontSize, options) {
   const padding = Math.min(width, height) * 0.2
   const textSizes = texts.map((text, index) => {
     const font = fonts[index]
-    const bbox = font.getPath(text.value, 0, 0, fontSize).getBoundingBox()
+    const bbox = font.getPath(text.value, 0, 0, fontSize * getFontScale(text)).getBoundingBox()
     const upHeight = -bbox.y1
     const downHeight = bbox.y2
     return { width: bbox.x2 - bbox.x1, height: upHeight + downHeight, upHeight, downHeight }
@@ -65,8 +66,9 @@ function measureTextSizes (fontSize, options) {
   return { textSizes, textWidth, textHeight, textUpHeight, spacing, padding }
 }
 
-function normalizeColor (color) {
-  return color.indexOf('#') ? `#${color}` : color
+function getFontScale (text) {
+  const scale = text.font.scale
+  return !isNaN(scale) ? Math.max(0.5, Math.min(2, scale)) : 1
 }
 
 function sum (x, y) {
