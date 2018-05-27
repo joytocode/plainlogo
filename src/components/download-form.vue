@@ -4,56 +4,85 @@
       class="pb-0"
       primary-title
     ><div class="headline">Download</div></v-card-title>
-    <v-card-text>
-      <div class="mb-3">
-        <div class="subheading grey--text text--darken-2">Width</div>
-        <v-text-field
-          v-model="width"
-          type="number"
-          step="50"
-          min="100"
-          max="1000"
-          class="pt-0"
-          hide-details
-        />
-      </div>
-      <div class="mb-3">
-        <div class="subheading grey--text text--darken-2">Height</div>
-        <v-text-field
-          v-model="height"
-          type="number"
-          step="50"
-          min="100"
-          max="1000"
-          class="pt-0"
-          hide-details
-        />
-      </div>
-      <div class="mb-3">
-        <div class="subheading grey--text text--darken-2 mb-1">Format</div>
-        <v-btn-toggle
-          v-model="formatIndex"
-          mandatory
-        >
-          <v-btn
-            v-for="formatItem in formatItems"
-            :key="formatItem.id"
-            flat
-          >{{ formatItem.label }}</v-btn>
-        </v-btn-toggle>
-      </div>
-    </v-card-text>
+    <v-tabs
+      centered
+      value="0"
+    >
+      <v-tab>
+        Image
+      </v-tab>
+      <v-tab-item>
+        <v-card-text>
+          <div class="mb-3">
+            <div class="subheading grey--text text--darken-2">Width</div>
+            <v-text-field
+              v-model="width"
+              type="number"
+              step="50"
+              min="100"
+              max="1000"
+              class="pt-0"
+              hide-details
+            />
+          </div>
+          <div class="mb-3">
+            <div class="subheading grey--text text--darken-2">Height</div>
+            <v-text-field
+              v-model="height"
+              type="number"
+              step="50"
+              min="100"
+              max="1000"
+              class="pt-0"
+              hide-details
+            />
+          </div>
+          <div class="text-xs-center">
+            <v-btn
+              v-for="formatItem in formatItems"
+              :key="formatItem.id"
+              color="primary"
+              @click="downloadImage(formatItem)"
+            >{{ formatItem.label }}</v-btn>
+          </div>
+        </v-card-text>
+      </v-tab-item>
+      <v-tab>
+        Inline HTML
+      </v-tab>
+      <v-tab-item>
+        <v-card-text>
+          <div class="mb-3">
+            <div class="subheading grey--text text--darken-2">Base font size</div>
+            <v-text-field
+              v-model="baseFontSize"
+              type="number"
+              step="50"
+              min="100"
+              max="1000"
+              class="pt-0"
+              hide-details
+            />
+          </div>
+          <div>
+            <div class="subheading grey--text text--darken-2">Inline HTML</div>
+            <v-text-field
+              :value="inlineHTML"
+              class="pt-0"
+              multi-line
+              readonly
+              hide-details
+            />
+          </div>
+        </v-card-text>
+      </v-tab-item>
+    </v-tabs>
     <v-card-actions>
       <v-spacer/>
       <v-btn
         flat
         @click.native="$emit('close')"
-      >Cancel</v-btn>
-      <v-btn
-        color="primary"
-        style="width: 10rem;"
-        @click.native="download"
-      >Download {{ valueFormatItem.label }}</v-btn>
+      >Close</v-btn>
     </v-card-actions>
   </v-card>
 </template>
@@ -82,12 +111,23 @@ export default {
       ],
       width: 400,
       height: 300,
-      formatIndex: 0
+      baseFontSize: 16
     }
   },
   computed: {
-    valueFormatItem () {
-      return this.formatItems[this.formatIndex]
+    inlineHTML () {
+      if (!this.params) {
+        return null
+      }
+      const style = [...new Set(this.params.texts.map((text) => {
+        const fontItem = this.resources.fontList.itemByFamily[text.font.name]
+        return `@font-face { font-family: '${text.font.name}-${text.font.style}'; src: url(${fontItem.files[text.font.style]}); }`
+      }))].join(' ')
+      const html = this.params.texts.map((text) => {
+        const inlineStyle = `font-family: ${text.font.name}-${text.font.style}; font-size: ${this.baseFontSize * text.font.scale}px; color: #${text.color}`
+        return `<span style="${inlineStyle}">${text.value}</span>`
+      }).join('')
+      return `<style>${style}</style>${html}`
     }
   },
   methods: {
@@ -109,8 +149,8 @@ export default {
         image.src = `data:image/svg+xml;base64,${Base64.encode(svg)}`
       })
     },
-    async download () {
-      const filename = `${this.params.texts.map(({ value }) => value).join('')}.${this.valueFormatItem.id}`
+    async downloadImage (formatItem) {
+      const filename = `${this.params.texts.map(({ value }) => value).join('')}.${formatItem.id}`
       const svg = await renderSVG({
         width: this.width,
         height: this.height,
@@ -126,9 +166,8 @@ export default {
           }
         })
       })
-      const blob = await this.valueFormatItem.createBlob(svg)
+      const blob = await formatItem.createBlob(svg)
       saveAs(blob, filename)
-      this.$emit('close')
     }
   }
 }

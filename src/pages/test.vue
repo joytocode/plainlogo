@@ -43,7 +43,7 @@
     </div>
     <v-dialog
       v-model="showDownload"
-      max-width="400"
+      max-width="500"
     >
       <download-form
         :resources="resources"
@@ -153,7 +153,7 @@ export default {
   top: 0
   left: 0
   right: 0
-  z-index: 9999
+  z-index: 9
   height: 10rem
 
 .editor-container
