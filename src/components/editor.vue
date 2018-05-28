@@ -1,120 +1,112 @@
 <template>
   <div>
-    <v-card
-      class="mb-2"
-      raised
-    >
-      <v-card-title
-        class="pb-0"
-        primary-title
-      >
-        <div class="headline">Settings</div>
-      </v-card-title>
-      <v-card-text class="py-0">
-        <v-form class="pt-3">
-          <v-text-field
-            v-validate="'required'"
-            v-model="params.name"
-            :error-messages="errors.collect('name')"
-            name="name"
-            label="Name"
-          />
-          <v-text-field
-            v-validate="'required'"
-            v-model="params.textColor"
-            :error-messages="errors.collect('textColor')"
-            name="textColor"
-            label="Text Color"
-          />
-          <v-text-field
-            v-validate="'required'"
-            v-model="params.width"
-            :error-messages="errors.collect('width')"
-            name="width"
-            label="Width"
-          />
-          <v-text-field
-            v-validate="'required'"
-            v-model="params.height"
-            :error-messages="errors.collect('height')"
-            name="height"
-            label="Height"
-          />
-          <v-text-field
-            v-validate="'required'"
-            v-model="params.padding"
-            :error-messages="errors.collect('padding')"
-            name="padding"
-            label="Padding"
-          />
-        </v-form>
-      </v-card-text>
-      <v-card-actions>
-        <v-spacer/>
-        <v-btn
-          flat
-          @click="reset"
-        >Reset</v-btn>
-      </v-card-actions>
-    </v-card>
-    <no-ssr>
-      <preview
-        :params="params"
-        font-name="InknutAntiqua"
+    <div class="mb-4">
+      <label class="headline">Background</label>
+      <v-switch
+        v-model="params.background.transparent"
+        color="primary"
+        label="Transparent"
+        hide-details
       />
-    </no-ssr>
+      <color-picker
+        v-if="!params.background.transparent"
+        v-model="params.background.color"
+      />
+    </div>
+    <div>
+      <label class="headline">Texts</label>
+      <v-btn
+        title="Add a new text"
+        color="primary"
+        large
+        flat
+        icon
+        @click="addText()"
+      >
+        <v-icon>fas fa-plus</v-icon>
+      </v-btn>
+      <div
+        v-for="(text, index) in params.texts"
+        :key="text.id"
+      >
+        <text-form
+          :resources="resources"
+          :text="text"
+          :expand="textExpandById[text.id]"
+          @toggle="toggleExpand(text.id)"
+          @add="addText(index)"
+          @remove="removeText(index)"
+        />
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
-const getDefaultParams = () => ({
-  name: 'PlainLogo',
-  textColor: 'EDB050',
-  width: 400,
-  height: 300,
-  padding: 20
-})
+import { defaultBackgroundColor, createTextItem } from '~/utils/params'
 
 export default {
-  $_veeValidate: {
-    validator: 'new'
-  },
   components: {
-    'preview': require('~/components/preview').default
+    'color-picker': require('./color-picker').default,
+    'text-form': require('./text-form').default
   },
   props: {
+    resources: {
+      type: Object,
+      required: true
+    },
     initialParams: {
       type: Object,
       required: true
     }
   },
   data () {
+    const { fontList } = this.resources
     return {
       params: {
-        ...getDefaultParams(),
+        background: {
+          transparent: true,
+          color: defaultBackgroundColor
+        },
+        texts: [
+          createTextItem(fontList, { value: 'Plain' }),
+          createTextItem(fontList, { value: 'Logo' })
+        ],
         ...this.initialParams
-      }
+      },
+      textExpandById: {}
     }
   },
   watch: {
     params: {
       handler (value) {
-        this.$emit('paramsChange', { params: value })
+        this.$emit('params-change', { params: value })
       },
       deep: true
     }
   },
   mounted () {
-    this.$emit('paramsChange', { params: this.params, first: true })
+    this.$emit('params-change', { params: this.params, first: true })
   },
   methods: {
-    reset () {
-      this.params = getDefaultParams()
-    },
     setParams (params) {
-      this.params = {
-        ...getDefaultParams(),
-        ...params
+      this.params = params
+    },
+    addText (indexToAdd) {
+      const texts = [...this.params.texts]
+      texts.splice(typeof indexToAdd === 'undefined' ? texts.length : (indexToAdd + 1), 0, createTextItem(this.resources.fontList))
+      this.params.texts = texts
+    },
+    removeText (indexToRemove) {
+      const texts = [...this.params.texts]
+      texts.splice(indexToRemove, 1)
+      this.params.texts = texts
+    },
+    toggleExpand (textId) {
+      const expand = this.textExpandById[textId]
+      this.textExpandById = {
+        ...this.textExpandById,
+        [textId]: !expand
       }
     }
   }

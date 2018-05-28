@@ -6,12 +6,35 @@
   "author": "JoyToCode <team@joytocode.com>",
   "license": "MIT",
   "scripts": {
-    "lint": "eslint --fix --ext .vue --ext .js .",
-    "posttest": "npm run lint -s",
+    "lint": "eslint --ext .vue --ext .js .",
+    "posttest": "npm run lint -s -- --fix",
+    "test": "jest",
+    "pretest:ci": "npm run lint -s",
+    "test:ci": "npm test -- --coverage",
     "start": "cross-env HOST=0.0.0.0 PORT=4000 nuxt",
     "build": "cross-env DEPLOY_ENV=GH_PAGES nuxt generate",
     "deploy": "gh-pages -d dist --dotfiles -m \"Updated by $(git rev-parse HEAD | cut -c 1-8)\"",
     "deploy:ci": "gh-pages --repo https://$GH_TOKEN@github.com/joytocode/plainlogo.git -d dist --dotfiles -m \"Updated by $(git rev-parse HEAD | cut -c 1-8)\""
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "clearMocks": true,
+    "collectCoverageFrom": [
+      "src/**/*.js"
+    ]
+  },
+  "babel": {
+    "presets": [
+      [
+        "babel-preset-env",
+        {
+          "targets": {
+            "node": "8"
+          },
+          "shippedProposals": true
+        }
+      ]
+    ]
   },
   "dependencies": {
     "axios": "^0.18.0",
@@ -31,6 +54,8 @@
     "vuetify": "^1.0.18"
   },
   "devDependencies": {
+    "babel-jest": "^23.0.1",
+    "babel-preset-env": "^1.7.0",
     "cross-env": "^5.1.6",
     "dotenv": "^5.0.1",
     "eslint": "^4.19.1",
@@ -41,6 +66,7 @@
     "eslint-plugin-standard": "^3.1.0",
     "eslint-plugin-vue": "^4.5.0",
     "gh-pages": "^1.1.0",
+    "jest": "^23.0.1",
     "stylus": "^0.54.5",
     "stylus-loader": "^3.0.2"
   }

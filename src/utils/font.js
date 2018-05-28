@@ -57,8 +57,3 @@ export async function loadFontByUrl (fontUrl) {
     })
   }))
 }
-
-// TODO deprecated
-export function loadFont (fontName) {
-  return loadFontByUrl(`https://rawgit.com/google/fonts/master/ofl/${fontName.toLowerCase()}/${fontName}-Bold.ttf`)
-}

@@ -90,6 +90,7 @@
 <script>
 import { Base64 } from 'js-base64'
 import { saveAs } from 'file-saver'
+import { normalizeTextOptions } from '~/utils/params'
 import { renderSVG } from '~/utils/renderer'
 
 export default {
@@ -121,10 +122,10 @@ export default {
       }
       const style = [...new Set(this.params.texts.map((text) => {
         const fontItem = this.resources.fontList.itemByFamily[text.font.name]
-        return `@font-face { font-family: '${text.font.name}-${text.font.style}'; src: url(${fontItem.files[text.font.style]}); }`
+        return `@font-face { font-family: '${text.font.name} ${text.font.style} Preview'; src: url(${fontItem.files[text.font.style]}); }`
       }))].join(' ')
       const html = this.params.texts.map((text) => {
-        const inlineStyle = `font-family: ${text.font.name}-${text.font.style}; font-size: ${this.baseFontSize * text.font.scale}px; color: #${text.color}`
+        const inlineStyle = `font-family: ${text.font.name} ${text.font.style} Preview; font-size: ${this.baseFontSize * text.font.scale}px; color: #${text.color}`
         return `<span style="${inlineStyle}">${text.value}</span>`
       }).join('')
       return `<style>${style}</style>${html}`
@@ -155,16 +156,7 @@ export default {
         width: this.width,
         height: this.height,
         ...this.params,
-        texts: this.params.texts.map((text) => {
-          const fontItem = this.resources.fontList.itemByFamily[text.font.name]
-          return {
-            ...text,
-            font: {
-              url: fontItem.files[text.font.style],
-              scale: text.font.scale
-            }
-          }
-        })
+        texts: this.params.texts.map((text) => normalizeTextOptions(this.resources.fontList, text))
       })
       const blob = await formatItem.createBlob(svg)
       saveAs(blob, filename)

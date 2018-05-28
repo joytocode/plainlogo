@@ -1,54 +1,156 @@
 <template>
-  <v-container fluid>
-    <editor
-      v-if="initialParams"
-      ref="editor"
-      :initial-params="initialParams"
-      @paramsChange="updateParams"
-    />
-  </v-container>
+  <div>
+    <div
+      v-resize="resizeListener"
+      ref="previewContainer"
+      class="white preview-container elevation-4"
+    >
+      <div class="accent">
+        <v-container class="py-0">
+          <v-toolbar
+            color="accent"
+            flat
+            dense
+            dark
+          >
+            <v-toolbar-items class="ml-0">
+              <v-btn
+                title="About"
+                flat
+              >About</v-btn>
+            </v-toolbar-items>
+            <v-spacer/>
+            <v-btn
+              title="Download this logo"
+              icon
+              @click.native.stop="setShowDownload(true)"
+            ><v-icon>fas fa-cloud-download-alt</v-icon></v-btn>
+            <v-btn
+              href="https://github.com/joytocode/plainlogo"
+              target="_blank"
+              title="Fork this project on GitHub"
+              flat
+              icon
+            ><v-icon>fab fa-github</v-icon></v-btn>
+          </v-toolbar>
+        </v-container>
+      </div>
+      <preview
+        :size="previewSize"
+        :resources="resources"
+        :params="params"
+      />
+    </div>
+    <v-dialog
+      v-model="showDownload"
+      max-width="500"
+    >
+      <download-form
+        :resources="resources"
+        :params="params"
+        @close="setShowDownload(false)"
+      />
+    </v-dialog>
+    <v-container class="editor-container">
+      <div
+        v-if="loading"
+        class="text-xs-center mt-4"
+      >
+        <v-progress-circular
+          :size="70"
+          :width="7"
+          indeterminate
+          color="primary"
+        />
+      </div>
+      <v-alert
+        v-if="loadError"
+        :value="true"
+        type="error"
+        class="mt-3"
+        outline
+      >{{ loadError }}</v-alert>
+      <editor
+        v-if="resources && initialParams"
+        ref="editor"
+        :resources="resources"
+        :initial-params="initialParams"
+        class="mt-4"
+        @params-change="paramsListener"
+      />
+    </v-container>
+  </div>
 </template>
 
 <script>
-import debounce from 'lodash.debounce'
 import qs from 'qs'
+import debounce from 'lodash.debounce'
+import { getFontList } from '~/utils/font'
+import { encodeQuery, decodeQuery } from '~/utils/params'
 
 export default {
   head: {
-    title: 'Home'
+    title: 'PlainLogo'
   },
   components: {
-    'editor': require('~/components/editor').default
+    'preview': require('~/components/preview').default,
+    'editor': require('~/components/editor').default,
+    'download-form': require('~/components/download-form').default
   },
   data () {
     return {
-      initialParams: null
+      loading: false,
+      loadError: null,
+      resources: null,
+      initialParams: null,
+      params: null,
+      previewSize: null,
+      showDownload: false
     }
   },
   created () {
-    this.updateParams = debounce(this.syncUrlFromParams, 500)
+    this.resizeListener = debounce(this.handleResize, 300)
+    this.paramsListener = debounce(this.updateParams, 500)
   },
   mounted () {
+    this.loadResources()
+    this.updatePreviewSize()
     this.initialParams = this.parseParamsFromUrl()
-    window.onpopstate = this.syncParamsFromUrl
+    window.onpopstate = this.setParamsFromUrl
   },
   beforeDestroy () {
     window.onpopstate = () => {}
   },
   methods: {
-    getQueryString () {
-      return this.$route.fullPath.substring(this.$route.path.length + 1)
+    async loadResources () {
+      if (this.loading) {
+        return
+      }
+      try {
+        this.loading = true
+        const fontList = await getFontList()
+        this.loading = false
+        this.resources = { fontList }
+      } catch (err) {
+        console.error(err)
+        this.loading = false
+        this.loadError = 'Failed to load resources.'
+      }
     },
-    parseParamsFromUrl () {
+    handleResize () {
+      this.updatePreviewSize()
+    },
+    updatePreviewSize () {
+      const previewContainer = this.$refs.previewContainer
+      this.previewSize = {
+        width: previewContainer.clientWidth,
+        height: previewContainer.clientHeight - 48
+      }
+    },
+    updateParams ({ params, first }) {
+      this.params = { ...params }
       const querystring = this.getQueryString()
-      return querystring ? qs.parse(querystring) : {}
-    },
-    syncParamsFromUrl () {
-      this.$refs.editor.setParams(this.parseParamsFromUrl())
-    },
-    syncUrlFromParams ({ params, first }) {
-      const querystring = this.getQueryString()
-      const nextQuerystring = qs.stringify(params)
+      const nextQuerystring = qs.stringify(encodeQuery(params))
       if (querystring === nextQuerystring) {
         return
       }
@@ -57,7 +159,33 @@ export default {
       } else {
         this.$router.push(`${this.$route.path}?${nextQuerystring}`)
       }
+    },
+    getQueryString () {
+      return this.$route.fullPath.substring(this.$route.path.length + 1)
+    },
+    parseParamsFromUrl () {
+      return decodeQuery(qs.parse(this.getQueryString()))
+    },
+    setParamsFromUrl () {
+      this.$refs.editor.setParams(this.parseParamsFromUrl())
+    },
+    setShowDownload (showDownload) {
+      this.showDownload = showDownload
+      this.updatePreviewSize()
     }
   }
 }
 </script>
+
+<style lang="stylus" scoped>
+.preview-container
+  position: fixed
+  top: 0
+  left: 0
+  right: 0
+  z-index: 9
+  height: 10rem
+
+.editor-container
+  margin-top: 10rem
+</style>

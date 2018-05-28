@@ -34,7 +34,7 @@
             @click="updateFontName(fontItem.family)"
           >
             <style v-html="getFontFaceHtml(fontItem)"/>
-            <div :style="`font-family: ${fontItem.family}; color: ${color};`">{{ text }}</div>
+            <div :style="`font-family: ${fontItem.family} Preview; color: ${color};`">{{ text }}</div>
             <div class="caption">{{ fontItem.family }}</div>
           </v-flex>
         </v-layout>
@@ -153,7 +153,7 @@ export default {
     },
     getFontFaceHtml (fontItem) {
       const url = fontItem.files[fontItem.variants[0]]
-      return `@font-face { font-family: '${fontItem.family}'; src: url(${url}); }`
+      return `@font-face { font-family: '${fontItem.family} Preview'; src: url(${url}); }`
     }
   }
 }
