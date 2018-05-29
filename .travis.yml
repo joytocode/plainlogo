@@ -1,8 +1,8 @@
 sudo: false
 language: node_js
 branches:
-  only:
-  - master
+  only: 
+    - master
 os:
   - linux
 node_js:
@@ -12,5 +12,10 @@ before_install:
 install:
   - npm install
 script:
+  - npm run test:ci
   - npm run build
-  - npm run deploy:ci
+deploy:
+  provider: script
+  script: npm run deploy:ci
+  on:
+    branch: master

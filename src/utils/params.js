@@ -1,6 +1,8 @@
-export const defaultBackgroundColor = 'EEEEEE'
 export const defaultTextValue = '_'
 export const defaultTextColor = '000000'
+export const defaultBackgroundColor = 'EEEEEE'
+export const defaultSpacing = 15
+export const defaultPadding = 20
 
 let nextId = 1
 
@@ -14,17 +16,14 @@ export function normalizeTextOptions (fontList, text) {
   return {
     ...text,
     font: {
-      url: fontItem.files[text.font.style],
-      scale: text.font.scale
+      ...text.font,
+      url: fontItem.files[text.font.style]
     }
   }
 }
 
 export function encodeQuery (params) {
   const query = {}
-  if (params.background && !params.background.transparent) {
-    query.bg = params.background.color
-  }
   if (params.texts) {
     params.texts.forEach(({ value, color, font }, index) => {
       const id = index + 1
@@ -33,15 +32,20 @@ export function encodeQuery (params) {
       query[`f${id}`] = `${font.name}~${font.style}${font.scale !== 1 ? `~${font.scale}` : ''}`
     })
   }
+  if (params.background && !params.background.transparent) {
+    query.bg = params.background.color
+  }
+  if (params.spacing !== defaultSpacing) {
+    query.s = params.spacing
+  }
+  if (params.padding !== defaultPadding) {
+    query.p = params.padding
+  }
   return query
 }
 
 export function decodeQuery (query) {
   const params = {}
-  params.background = {
-    transparent: !query.bg,
-    color: query.bg || defaultBackgroundColor
-  }
   const textIds = []
   Object.keys(query).forEach((key) => {
     const matches = key.match(/t(\d*)/)
@@ -66,5 +70,11 @@ export function decodeQuery (query) {
       return text
     })
   }
+  params.background = {
+    transparent: !query.bg,
+    color: query.bg || defaultBackgroundColor
+  }
+  params.spacing = !isNaN(query.s) ? +query.s : defaultSpacing
+  params.padding = !isNaN(query.p) ? +query.p : defaultPadding
   return params
 }

@@ -70,6 +70,10 @@
         class="mt-3"
         outline
       >{{ loadError }}</v-alert>
+      <showcase
+        v-if="resources"
+        :resources="resources"
+      />
       <editor
         v-if="resources && initialParams"
         ref="editor"
@@ -93,6 +97,7 @@ export default {
     title: 'PlainLogo'
   },
   components: {
+    'showcase': require('~/components/showcase').default,
     'preview': require('~/components/preview').default,
     'editor': require('~/components/editor').default,
     'download-form': require('~/components/download-form').default

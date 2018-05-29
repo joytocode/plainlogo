@@ -91,7 +91,7 @@
 import { Base64 } from 'js-base64'
 import { saveAs } from 'file-saver'
 import { normalizeTextOptions } from '~/utils/params'
-import { renderSVG } from '~/utils/renderer'
+import { renderSVG, renderHTML } from '~/utils/renderer'
 
 export default {
   props: {
@@ -120,15 +120,11 @@ export default {
       if (!this.params) {
         return null
       }
-      const style = [...new Set(this.params.texts.map((text) => {
-        const fontItem = this.resources.fontList.itemByFamily[text.font.name]
-        return `@font-face { font-family: '${text.font.name} ${text.font.style} Preview'; src: url(${fontItem.files[text.font.style]}); }`
-      }))].join(' ')
-      const html = this.params.texts.map((text) => {
-        const inlineStyle = `font-family: ${text.font.name} ${text.font.style} Preview; font-size: ${this.baseFontSize * text.font.scale}px; color: #${text.color}`
-        return `<span style="${inlineStyle}">${text.value}</span>`
-      }).join('')
-      return `<style>${style}</style>${html}`
+      return renderHTML({
+        baseFontSize: this.baseFontSize,
+        ...this.params,
+        texts: this.params.texts.map((text) => normalizeTextOptions(this.resources.fontList, text))
+      })
     }
   },
   methods: {

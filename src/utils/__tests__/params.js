@@ -1,5 +1,5 @@
 import {
-  defaultBackgroundColor, defaultTextValue, defaultTextColor,
+  defaultTextValue, defaultTextColor, defaultBackgroundColor, defaultSpacing, defaultPadding,
   createTextItem, normalizeTextOptions, encodeQuery, decodeQuery
 } from '../params'
 
@@ -59,7 +59,7 @@ describe('normalizeTextOptions', () => {
   })
   it('should normalize text options', () => {
     const text = normalizeTextOptions(fontList, options)
-    expect(text).toEqual({ value: 'A', color: 'FF0000', font: { url: 'X-200.ttf', scale: 2 } })
+    expect(text).toEqual({ value: 'A', color: 'FF0000', font: { url: 'X-200.ttf', name: 'X', style: '200', scale: 2 } })
   })
 })
 
@@ -67,27 +67,20 @@ describe('encodeQuery', () => {
   let params
   beforeEach(() => {
     params = {
-      background: { transparent: true, color: '333333' },
       texts: [
         { value: 'A', color: 'FF0000', font: { name: 'X', style: '200', scale: 1 } },
         { value: 'B', color: '00FF00', font: { name: 'Y', style: 'italic', scale: 0.5 } },
         { value: 'C', color: '0000FF', font: { name: 'Z', style: 'bold', scale: 2 } }
-      ]
+      ],
+      background: { transparent: true, color: '333333' },
+      spacing: defaultSpacing * 2,
+      padding: defaultPadding * 2
     }
-  })
-  it('should ignore transparent background', () => {
-    const query = encodeQuery(params)
-    expect(query.bg).toBeUndefined()
   })
   it('should ignore texts if none', () => {
     delete params.texts
     const query = encodeQuery(params)
     expect(query.t1).toBeUndefined()
-  })
-  it('should encode color background', () => {
-    params.background.transparent = false
-    const query = encodeQuery(params)
-    expect(query.bg).toBe('333333')
   })
   it('should encode text values', () => {
     const query = encodeQuery(params)
@@ -107,13 +100,39 @@ describe('encodeQuery', () => {
     expect(query.f2).toBe('Y~italic~0.5')
     expect(query.f3).toBe('Z~bold~2')
   })
+  it('should ignore transparent background', () => {
+    const query = encodeQuery(params)
+    expect(query.bg).toBeUndefined()
+  })
+  it('should encode color background', () => {
+    params.background.transparent = false
+    const query = encodeQuery(params)
+    expect(query.bg).toBe('333333')
+  })
+  it('should encode spacing if not default', () => {
+    const query = encodeQuery(params)
+    expect(query.s).toBe(defaultSpacing * 2)
+  })
+  it('should ignore spacing if default', () => {
+    params.spacing = defaultSpacing
+    const query = encodeQuery(params)
+    expect(query.s).toBeUndefined()
+  })
+  it('should encode padding if not default', () => {
+    const query = encodeQuery(params)
+    expect(query.p).toBe(defaultPadding * 2)
+  })
+  it('should ignore padding if default', () => {
+    params.padding = defaultPadding
+    const query = encodeQuery(params)
+    expect(query.p).toBeUndefined()
+  })
 })
 
 describe('decodeQuery', () => {
   let query
   beforeEach(() => {
     query = {
-      bg: '333333',
       t2: 'B',
       t1: 'A',
       t3: 'C',
@@ -122,17 +141,11 @@ describe('decodeQuery', () => {
       c1: 'FF0000',
       f1: 'X~200',
       f3: 'Z~bold~2',
-      f2: 'Y~italic~0.5'
+      f2: 'Y~italic~0.5',
+      bg: '333333',
+      s: 20,
+      p: 40
     }
-  })
-  it('should decode transparent background', () => {
-    delete query.bg
-    const params = decodeQuery(query)
-    expect(params.background).toEqual({ transparent: true, color: defaultBackgroundColor })
-  })
-  it('should decode color background', () => {
-    const params = decodeQuery(query)
-    expect(params.background).toEqual({ transparent: false, color: '333333' })
   })
   it('should decode text values', () => {
     const params = decodeQuery(query)
@@ -169,5 +182,28 @@ describe('decodeQuery', () => {
     delete query.t3
     const params = decodeQuery(query)
     expect(params.texts).toBeUndefined()
+  })
+  it('should decode transparent background', () => {
+    delete query.bg
+    const params = decodeQuery(query)
+    expect(params.background).toEqual({ transparent: true, color: defaultBackgroundColor })
+  })
+  it('should decode color background', () => {
+    const params = decodeQuery(query)
+    expect(params.background).toEqual({ transparent: false, color: '333333' })
+  })
+  it('should decode spacing', () => {
+    const params = decodeQuery(query)
+    expect(params.spacing).toBe(20)
+  })
+  it('should give default spacing if none', () => {
+    delete query.s
+    const params = decodeQuery(query)
+    expect(params.spacing).toBe(defaultSpacing)
+  })
+  it('should give default padding if none', () => {
+    delete query.p
+    const params = decodeQuery(query)
+    expect(params.padding).toBe(defaultPadding)
   })
 })

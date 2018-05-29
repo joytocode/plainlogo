@@ -1,18 +1,5 @@
 <template>
   <div>
-    <div class="mb-4">
-      <label class="headline">Background</label>
-      <v-switch
-        v-model="params.background.transparent"
-        color="primary"
-        label="Transparent"
-        hide-details
-      />
-      <color-picker
-        v-if="!params.background.transparent"
-        v-model="params.background.color"
-      />
-    </div>
     <div>
       <label class="headline">Texts</label>
       <v-btn
@@ -39,11 +26,48 @@
         />
       </div>
     </div>
+    <div class="mb-4">
+      <label class="headline">Background</label>
+      <v-switch
+        v-model="params.background.transparent"
+        color="primary"
+        label="Transparent"
+        hide-details
+      />
+      <color-picker
+        v-if="!params.background.transparent"
+        v-model="params.background.color"
+      />
+    </div>
+    <div class="mb-4">
+      <label class="headline">Spacing</label>
+      <v-text-field
+        v-model="params.spacing"
+        type="number"
+        step="5"
+        min="0"
+        max="50"
+        class="pt-0"
+        hide-details
+      />
+    </div>
+    <div class="mb-4">
+      <label class="headline">Padding</label>
+      <v-text-field
+        v-model="params.padding"
+        type="number"
+        step="5"
+        min="0"
+        max="50"
+        class="pt-0"
+        hide-details
+      />
+    </div>
   </div>
 </template>
 
 <script>
-import { defaultBackgroundColor, createTextItem } from '~/utils/params'
+import { defaultBackgroundColor, defaultSpacing, defaultPadding, createTextItem } from '~/utils/params'
 
 export default {
   components: {
@@ -64,14 +88,16 @@ export default {
     const { fontList } = this.resources
     return {
       params: {
-        background: {
-          transparent: true,
-          color: defaultBackgroundColor
-        },
         texts: [
           createTextItem(fontList, { value: 'Plain' }),
           createTextItem(fontList, { value: 'Logo' })
         ],
+        background: {
+          transparent: true,
+          color: defaultBackgroundColor
+        },
+        spacing: defaultSpacing,
+        padding: defaultPadding,
         ...this.initialParams
       },
       textExpandById: {}

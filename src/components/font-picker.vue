@@ -17,7 +17,7 @@
     />
     <div class="px-3 mb-4">
       <v-container
-        class="white elevation-3"
+        :style="`background-color: #${backgroundColor};`"
         grid-list-xs
       >
         <v-layout
@@ -27,6 +27,7 @@
           <v-flex
             v-for="fontItem in pageFontItems"
             :key="fontItem.family"
+            :style="`border: 2px solid #${backgroundColor}`"
             :class="`font-preview ${value.name === fontItem.family ? 'selected' : ''} text-xs-center pa-2`"
             xs6
             sm4
@@ -72,6 +73,7 @@
       min="0.5"
       max="2"
       class="pt-0"
+      hide-details
       @input="updateFontScale"
     />
   </div>
@@ -79,6 +81,7 @@
 
 <script>
 import { fontStyleNameById } from '~/utils/font'
+import { defaultBackgroundColor } from '~/utils/params'
 
 export default {
   components: {
@@ -111,7 +114,8 @@ export default {
       filter: {
         categories: [...this.fontList.categories]
       },
-      page: 1
+      page: 1,
+      backgroundColor: defaultBackgroundColor
     }
   },
   computed: {
@@ -164,9 +168,10 @@ export default {
   font-size: 2rem
   overflow: hidden
   cursor: pointer
-  border: 2px solid #FFFFFF
   &.selected
-    border: 2px solid #AE74CA
+    border: 2px solid #AE74CA !important
+    padding: 0
   &:hover
-    border: 2px dashed #666666
+    border: 2px dashed #666666 !important
+    padding: 0
 </style>
