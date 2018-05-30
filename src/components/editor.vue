@@ -89,8 +89,10 @@ export default {
     return {
       params: {
         texts: [
-          createTextItem(fontList, { value: 'Plain' }),
-          createTextItem(fontList, { value: 'Logo' })
+          createTextItem(fontList, { value: 'P', color: 'AE74CA', font: { name: 'Akronim', style: 'regular', scale: 1.2 } }),
+          createTextItem(fontList, { value: 'lain', color: '616F67', font: { name: 'Akronim', style: 'regular', scale: 1 } }),
+          createTextItem(fontList, { value: 'L', color: 'AE74CA', font: { name: 'Akronim', style: 'regular', scale: 1.2 } }),
+          createTextItem(fontList, { value: 'ogo', color: '616F67', font: { name: 'Akronim', style: 'regular', scale: 1 } })
         ],
         background: {
           transparent: true,

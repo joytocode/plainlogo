@@ -4,79 +4,81 @@
       class="pb-0"
       primary-title
     ><div class="headline">Download</div></v-card-title>
-    <v-tabs
-      centered
-      value="0"
-    >
-      <v-tab>
-        Image
-      </v-tab>
-      <v-tab-item>
-        <v-card-text>
-          <div class="mb-3">
-            <div class="subheading grey--text text--darken-2">Width</div>
-            <v-text-field
-              v-model="width"
-              type="number"
-              step="50"
-              min="100"
-              max="1000"
-              class="pt-0"
-              hide-details
-            />
-          </div>
-          <div class="mb-3">
-            <div class="subheading grey--text text--darken-2">Height</div>
-            <v-text-field
-              v-model="height"
-              type="number"
-              step="50"
-              min="100"
-              max="1000"
-              class="pt-0"
-              hide-details
-            />
-          </div>
-          <div class="text-xs-center">
-            <v-btn
-              v-for="formatItem in formatItems"
-              :key="formatItem.id"
-              color="primary"
-              @click="downloadImage(formatItem)"
-            >{{ formatItem.label }}</v-btn>
-          </div>
-        </v-card-text>
-      </v-tab-item>
-      <v-tab>
-        Inline HTML
-      </v-tab>
-      <v-tab-item>
-        <v-card-text>
-          <div class="mb-3">
-            <div class="subheading grey--text text--darken-2">Base font size</div>
-            <v-text-field
-              v-model="baseFontSize"
-              type="number"
-              step="50"
-              min="100"
-              max="1000"
-              class="pt-0"
-              hide-details
-            />
-          </div>
-          <div>
-            <div class="subheading grey--text text--darken-2">Inline HTML</div>
-            <v-text-field
-              :value="inlineHTML"
-              class="pt-0"
-              multi-line
-              readonly
-              hide-details
-            />
-          </div>
-        </v-card-text>
-      </v-tab-item>
-    </v-tabs>
+    <v-card-text>
+      <v-tabs
+        centered
+        value="0"
+      >
+        <v-tab>
+          Image
+        </v-tab>
+        <v-tab-item>
+          <v-card-text>
+            <div class="mb-3">
+              <div class="subheading grey--text text--darken-2">Width</div>
+              <v-text-field
+                v-model="width"
+                type="number"
+                step="50"
+                min="100"
+                max="1000"
+                class="pt-0"
+                hide-details
+              />
+            </div>
+            <div class="mb-3">
+              <div class="subheading grey--text text--darken-2">Height</div>
+              <v-text-field
+                v-model="height"
+                type="number"
+                step="50"
+                min="100"
+                max="1000"
+                class="pt-0"
+                hide-details
+              />
+            </div>
+            <div class="text-xs-center">
+              <v-btn
+                v-for="formatItem in formatItems"
+                :key="formatItem.id"
+                color="primary"
+                @click="downloadImage(formatItem)"
+              >{{ formatItem.label }}</v-btn>
+            </div>
+          </v-card-text>
+        </v-tab-item>
+        <v-tab>
+          Inline HTML
+        </v-tab>
+        <v-tab-item>
+          <v-card-text>
+            <div class="mb-3">
+              <div class="subheading grey--text text--darken-2">Base font size</div>
+              <v-text-field
+                v-model="baseFontSize"
+                type="number"
+                step="50"
+                min="100"
+                max="1000"
+                class="pt-0"
+                hide-details
+              />
+            </div>
+            <div>
+              <div class="subheading grey--text text--darken-2">Inline HTML</div>
+              <v-text-field
+                :value="inlineHTML"
+                class="pt-0"
+                multi-line
+                readonly
+                hide-details
+              />
+            </div>
+          </v-card-text>
+        </v-tab-item>
+      </v-tabs>
+    </v-card-text>
     <v-card-actions>
       <v-spacer/>
       <v-btn

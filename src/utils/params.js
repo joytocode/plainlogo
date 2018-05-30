@@ -1,8 +1,8 @@
 export const defaultTextValue = '_'
 export const defaultTextColor = '000000'
 export const defaultBackgroundColor = 'EEEEEE'
-export const defaultSpacing = 15
-export const defaultPadding = 20
+export const defaultSpacing = 5
+export const defaultPadding = 10
 
 let nextId = 1
 

@@ -17,5 +17,6 @@ script:
 deploy:
   provider: script
   script: npm run deploy:ci
+  skip_cleanup: true
   on:
     branch: master

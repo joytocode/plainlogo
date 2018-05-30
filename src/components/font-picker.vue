@@ -51,7 +51,8 @@
           >
             <v-pagination
               :length="pageLength"
-              v-model="page"
+              :value="currentPage"
+              @input="setPage"
             />
           </v-flex>
         </v-layout>
@@ -114,7 +115,7 @@ export default {
       filter: {
         categories: [...this.fontList.categories]
       },
-      page: 1,
+      page: null,
       backgroundColor: defaultBackgroundColor
     }
   },
@@ -129,22 +130,31 @@ export default {
       return Math.floor(this.fontItems.length / this.itemsPerPage) + (this.fontItems.length % this.itemsPerPage ? 1 : 0)
     },
     pageFontItems () {
-      return this.fontItems.slice((this.page - 1) * this.itemsPerPage, Math.min(this.fontItems.length, this.page * this.itemsPerPage))
+      return this.fontItems.slice((this.currentPage - 1) * this.itemsPerPage, Math.min(this.fontItems.length, this.currentPage * this.itemsPerPage))
     },
     styleItems () {
       return this.valueFontItem.variants.map((variant) => ({ value: variant, text: fontStyleNameById[variant] }))
+    },
+    currentPage () {
+      return this.page || this.getPageByName(this.value.name)
     }
   },
   methods: {
     updateFontName (name) {
-      const index = this.fontItems.findIndex((item) => item.family === name)
-      const fontItem = this.fontItems[index]
+      const fontItem = this.fontList.itemByFamily[name]
       const style = fontItem.variants.includes(this.value.style) ? this.value.style : fontItem.variants[0]
-      const page = Math.floor(index / this.itemsPerPage) + 1
+      const page = this.getPageByName(name)
       if (this.page !== page) {
         this.page = page
       }
       this.updateValue({ name, style })
+    },
+    getPageByName (name) {
+      const index = this.fontItems.findIndex((item) => item.family === name)
+      return Math.floor(index / this.itemsPerPage) + 1
+    },
+    setPage (page) {
+      this.page = page
     },
     updateFontStyle (style) {
       this.updateValue({ style })
