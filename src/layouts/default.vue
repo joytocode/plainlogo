@@ -1,5 +1,5 @@
 <template>
-  <v-app>
+  <v-app class="secondary lighten-5">
     <v-content>
       <nuxt/>
     </v-content>

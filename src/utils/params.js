@@ -12,12 +12,12 @@ export function createTextItem (fontList, { value = defaultTextValue, color = de
 }
 
 export function normalizeTextOptions (fontList, text) {
-  const fontItem = fontList.itemByFamily[text.font.name]
+  const fontItem = fontList.itemByFamily[text.font.name] || fontList.items[0]
   return {
     ...text,
     font: {
       ...text.font,
-      url: fontItem.files[text.font.style]
+      url: fontItem.files[text.font.style] || fontItem.files[fontItem.variants[0]]
     }
   }
 }

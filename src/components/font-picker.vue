@@ -8,7 +8,7 @@
     />
     <v-select
       :items="fontItems"
-      :value="value.name"
+      :value="valueFontItem.family"
       item-text="family"
       item-value="family"
       class="pt-0"
@@ -61,7 +61,7 @@
     <label class="subheading grey--text text--darken-2">Font Style ({{ styleItems.length }})</label>
     <v-select
       :items="styleItems"
-      :value="value.style"
+      :value="valueStyleItem"
       class="pt-0"
       autocomplete
       @input="updateFontStyle"
@@ -124,7 +124,7 @@ export default {
       return this.fontList.items.filter((fontItem) => this.filter.categories.includes(fontItem.category))
     },
     valueFontItem () {
-      return this.fontList.itemByFamily[this.value.name]
+      return this.fontList.itemByFamily[this.value.name] || this.fontList.items[0]
     },
     pageLength () {
       return Math.floor(this.fontItems.length / this.itemsPerPage) + (this.fontItems.length % this.itemsPerPage ? 1 : 0)
@@ -134,6 +134,9 @@ export default {
     },
     styleItems () {
       return this.valueFontItem.variants.map((variant) => ({ value: variant, text: fontStyleNameById[variant] }))
+    },
+    valueStyleItem () {
+      return this.valueFontItem.variants.includes(this.value.style) ? this.value.style : this.valueFontItem.variants[0]
     },
     currentPage () {
       return this.page || this.getPageByName(this.value.name)
@@ -151,7 +154,7 @@ export default {
     },
     getPageByName (name) {
       const index = this.fontItems.findIndex((item) => item.family === name)
-      return Math.floor(index / this.itemsPerPage) + 1
+      return index !== -1 ? (Math.floor(index / this.itemsPerPage) + 1) : 1
     },
     setPage (page) {
       this.page = page

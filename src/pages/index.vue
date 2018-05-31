@@ -1,5 +1,5 @@
 <template>
-  <div class="secondary lighten-5">
+  <div>
     <div
       v-resize="resizeListener"
       ref="previewContainer"
