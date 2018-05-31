@@ -1,6 +1,10 @@
 require('dotenv').config()
 const path = require('path')
 
+const isGenerating = process.env.DEPLOY_ENV === 'GH_PAGES'
+
+const staticRoot = isGenerating ? '/plainlogo' : ''
+
 exports.rootDir = __dirname
 
 exports.srcDir = path.join(__dirname, 'src')
@@ -25,11 +29,11 @@ exports.head = {
     { name: 'viewport', content: 'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui' }
   ],
   link: [
-    { rel: 'apple-touch-icon', sizes: '180x180', href: '/apple-touch-icon.png' },
-    { rel: 'icon', type: 'image/png', sizes: '32x32', href: '/favicon-32x32.png' },
-    { rel: 'icon', type: 'image/png', sizes: '16x16', href: '/favicon-16x16.png' },
-    { rel: 'manifest', href: '/site.webmanifest' },
-    { rel: 'mask-icon', href: '/safari-pinned-tab.svg', color: '#5bbad5' },
+    { rel: 'apple-touch-icon', sizes: '180x180', href: `${staticRoot}/apple-touch-icon.png` },
+    { rel: 'icon', type: 'image/png', sizes: '32x32', href: `${staticRoot}/favicon-32x32.png` },
+    { rel: 'icon', type: 'image/png', sizes: '16x16', href: `${staticRoot}/favicon-16x16.png` },
+    { rel: 'manifest', href: `${staticRoot}/site.webmanifest` },
+    { rel: 'mask-icon', href: `${staticRoot}/safari-pinned-tab.svg`, color: '#5bbad5' },
     { rel: 'stylesheet', type: 'text/css', href: 'https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons' },
     { rel: 'stylesheet', type: 'text/css', href: 'https://use.fontawesome.com/releases/v5.0.13/css/all.css', integrity: 'sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp', crossorigin: 'anonymous' }
   ]
@@ -70,4 +74,4 @@ exports.build = {
   }
 }
 
-exports.router = process.env.DEPLOY_ENV === 'GH_PAGES' ? { base: '/plainlogo/' } : {}
+exports.router = isGenerating ? { base: `${staticRoot}/` } : {}
