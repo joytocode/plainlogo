@@ -38,6 +38,7 @@
     ]
   },
   "dependencies": {
+    "@nuxtjs/google-analytics": "^2.0.2",
     "axios": "^0.18.0",
     "blob-polyfill": "^2.0.20171115",
     "blueimp-canvas-to-blob": "^3.14.0",
@@ -51,6 +52,7 @@
     "qs": "^6.5.2",
     "vue-async-computed": "^3.3.1",
     "vue-color": "^2.4.6",
+    "vue-social-sharing": "^2.3.3",
     "vuetify": "^1.0.18"
   },
   "devDependencies": {
@@ -65,7 +67,7 @@
     "eslint-plugin-promise": "^3.8.0",
     "eslint-plugin-standard": "^3.1.0",
     "eslint-plugin-vue": "^4.5.0",
-    "gh-pages": "^1.1.0",
+    "gh-pages": "^1.2.0",
     "jest": "^23.1.0",
     "stylus": "^0.54.5",
     "stylus-loader": "^3.0.2"

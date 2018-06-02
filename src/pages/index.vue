@@ -25,6 +25,46 @@
               icon
               @click.native.stop="setShowDownload(true)"
             ><v-icon>fas fa-cloud-download-alt</v-icon></v-btn>
+            <v-menu
+              max-height="250"
+              offset-y
+              left
+              attach
+            >
+              <v-btn
+                slot="activator"
+                title="Share this logo"
+                icon
+              ><v-icon>fas fa-share-alt</v-icon></v-btn>
+              <v-list>
+                <social-sharing
+                  v-for="network in networks"
+                  :key="network.id"
+                  :url="url"
+                  title="PlainLogo"
+                  description="PlainLogo"
+                  quote="Created by PlainLogo."
+                  hashtags="joytocode,plainlogo"
+                  twitter-user="joytocode"
+                  inline-template
+                >
+                  <v-list-tile>
+                    <network
+                      :network="network.id"
+                      style="width: 100%"
+                    >
+                      <a
+                        class="btn btn--block btn--flat"
+                        style="justify-content: left"
+                      >
+                        <v-icon left>{{ network.icon }} fa-fw</v-icon>
+                        {{ network.name }}
+                      </a>
+                    </network>
+                  </v-list-tile>
+                </social-sharing>
+              </v-list>
+            </v-menu>
             <v-btn
               href="https://github.com/joytocode/plainlogo"
               target="_blank"
@@ -91,6 +131,7 @@ import qs from 'qs'
 import debounce from 'lodash.debounce'
 import { getFontList } from '~/utils/font'
 import { encodeQuery, decodeQuery } from '~/utils/params'
+import networks from '~/utils/socials'
 
 export default {
   head: {
@@ -110,7 +151,13 @@ export default {
       initialParams: null,
       params: null,
       previewSize: null,
-      showDownload: false
+      showDownload: false,
+      networks
+    }
+  },
+  computed: {
+    url () {
+      return `https://joytocode.github.io/plainlogo${this.$route.fullPath}`
     }
   },
   created () {

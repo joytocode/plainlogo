@@ -46,6 +46,7 @@ exports.css = [
 exports.plugins = [
   path.join(__dirname, 'src/plugins/vuetify'),
   path.join(__dirname, 'src/plugins/vue-async-computed'),
+  path.join(__dirname, 'src/plugins/vue-social-sharing'),
   { src: path.join(__dirname, 'src/plugins/blob'), ssr: false }
 ]
 
@@ -53,12 +54,20 @@ exports.serverMiddleware = [
   path.join(__dirname, 'src/server/ignore-src')
 ]
 
+exports.router = isGenerating ? { base: `${staticRoot}/` } : {}
+
+const modules = [
+  isGenerating && ['@nuxtjs/google-analytics', { id: process.env.GOOGLE_ANALYTICS_KEY }]
+]
+
+exports.modules = modules.filter((m) => !!m)
+
 exports.build = {
   extractCSS: true,
   vendor: [
     // Only keep common vendor modules here
-    'axios', 'blob-polyfill', 'blueimp-canvas-to-blob', 'change-case', 'color-string', 'file-saver', 'js-base64',
-    'lodash.debounce', 'opentype.js', 'qs', 'vue-async-computed', 'vue-color', 'vuetify'
+    '@nuxtjs/google-analytics', 'axios', 'blob-polyfill', 'blueimp-canvas-to-blob', 'change-case', 'color-string', 'file-saver',
+    'js-base64', 'lodash.debounce', 'opentype.js', 'qs', 'vue-async-computed', 'vue-color', 'vue-social-sharing', 'vuetify'
   ],
   extend (config) {
     // inline >= 2 will cause errors https://github.com/mishoo/UglifyJS2/issues/2842
@@ -73,5 +82,3 @@ exports.build = {
     })
   }
 }
-
-exports.router = isGenerating ? { base: `${staticRoot}/` } : {}
