@@ -12,6 +12,7 @@
       >
         <v-icon>fas fa-plus</v-icon>
       </v-btn>
+      <confirm-dialog ref="confirm"/>
       <div
         v-for="(text, index) in params.texts"
         :key="text.id"
@@ -72,7 +73,8 @@ import { defaultBackgroundColor, defaultSpacing, defaultPadding, createTextItem 
 export default {
   components: {
     'color-picker': require('./color-picker').default,
-    'text-form': require('./text-form').default
+    'text-form': require('./text-form').default,
+    'confirm-dialog': require('./confirm-dialog').default
   },
   props: {
     resources: {
@@ -125,10 +127,19 @@ export default {
       texts.splice(typeof indexToAdd === 'undefined' ? texts.length : (indexToAdd + 1), 0, createTextItem(this.resources.fontList))
       this.params.texts = texts
     },
-    removeText (indexToRemove) {
-      const texts = [...this.params.texts]
-      texts.splice(indexToRemove, 1)
-      this.params.texts = texts
+    async removeText (indexToRemove) {
+      const confirmed = await this.$refs.confirm.open({
+        title: `Delete '${this.params.texts[indexToRemove].value}'`,
+        message: 'Are you sure you want to delete this text?',
+        color: 'error',
+        action: 'Delete',
+        maxWidth: 400
+      })
+      if (confirmed) {
+        const texts = [...this.params.texts]
+        texts.splice(indexToRemove, 1)
+        this.params.texts = texts
+      }
     },
     toggleExpand (textId) {
       const expand = this.textExpandById[textId]
