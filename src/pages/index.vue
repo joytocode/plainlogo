@@ -15,6 +15,7 @@
           >
             <v-toolbar-items class="ml-0">
               <v-btn
+                href="#about"
                 title="About"
                 flat
               >About</v-btn>
@@ -91,7 +92,10 @@
         @close="setShowDownload(false)"
       />
     </v-dialog>
-    <v-container class="editor-container">
+    <v-container
+      id="top"
+      class="section-container"
+    >
       <div
         v-if="loading"
         class="text-xs-center mt-4"
@@ -123,35 +127,13 @@
         @params-change="paramsListener"
       />
     </v-container>
-    <div class="text-xs-center my-4">
-      <p class="body-2">A product by <a
-        href="https://www.joytocode.com/"
-        target="_blank"
-      >JoyToCode</a>.</p>
-      <v-btn
-        href="https://github.com/joytocode"
-        target="_blank"
-        title="GitHub"
-        icon
-      >
-        <v-icon>fab fa-github</v-icon>
-      </v-btn>
-      <v-btn
-        href="https://twitter.com/joytocode"
-        target="_blank"
-        title="Twitter"
-        icon
-      >
-        <v-icon>fab fa-twitter</v-icon>
-      </v-btn>
-      <v-btn
-        href="mailto:team@joytocode.com"
-        title="Email"
-        icon
-      >
-        <v-icon>fas fa-envelope</v-icon>
-      </v-btn>
+    <div
+      id="about"
+      class="section-container"
+    >
+      <about-section/>
     </div>
+    <footer-section/>
   </div>
 </template>
 
@@ -170,11 +152,13 @@ export default {
     'showcase': require('~/components/showcase').default,
     'preview': require('~/components/preview').default,
     'editor': require('~/components/editor').default,
-    'download-form': require('~/components/download-form').default
+    'download-form': require('~/components/download-form').default,
+    'about-section': require('~/components/about-section').default,
+    'footer-section': require('~/components/footer-section').default
   },
   data () {
     return {
-      loading: false,
+      loading: true,
       loadError: null,
       resources: null,
       initialParams: null,
@@ -204,11 +188,7 @@ export default {
   },
   methods: {
     async loadResources () {
-      if (this.loading) {
-        return
-      }
       try {
-        this.loading = true
         const fontList = await getFontList()
         this.loading = false
         this.resources = { fontList }
@@ -267,6 +247,6 @@ export default {
   z-index: 9
   height: 10rem
 
-.editor-container
-  margin-top: 10rem
+.section-container
+  padding-top: 10rem
 </style>

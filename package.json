@@ -1,7 +1,7 @@
 {
   "name": "@joytocode/plainlogo",
   "version": "0.1.0",
-  "description": "Turn name into logo.",
+  "description": "Logo design made plain.",
   "repository": "https://github.com/joytocode/plainlogo",
   "author": "JoyToCode <team@joytocode.com>",
   "license": "MIT",
@@ -53,7 +53,7 @@
     "vue-async-computed": "^3.3.1",
     "vue-color": "^2.4.6",
     "vue-social-sharing": "^2.3.3",
-    "vuetify": "^1.0.18"
+    "vuetify": "^1.0.19"
   },
   "devDependencies": {
     "babel-jest": "^23.0.1",
