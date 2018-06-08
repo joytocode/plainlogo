@@ -8,7 +8,8 @@ exports.rootDir = __dirname
 exports.srcDir = path.join(__dirname, 'src')
 
 exports.env = {
-  GOOGLE_API_KEY: process.env.GOOGLE_API_KEY
+  GOOGLE_API_KEY: process.env.GOOGLE_API_KEY,
+  HEAP_ANALYTICS_KEY: process.env.HEAP_ANALYTICS_KEY
 }
 
 exports.loading = {
@@ -45,7 +46,8 @@ exports.plugins = [
   path.join(__dirname, 'src/plugins/vuetify'),
   path.join(__dirname, 'src/plugins/vue-async-computed'),
   path.join(__dirname, 'src/plugins/vue-social-sharing'),
-  { src: path.join(__dirname, 'src/plugins/blob'), ssr: false }
+  { src: path.join(__dirname, 'src/plugins/blob'), ssr: false },
+  { src: path.join(__dirname, 'src/plugins/heap-analytics'), ssr: false }
 ]
 
 exports.serverMiddleware = [

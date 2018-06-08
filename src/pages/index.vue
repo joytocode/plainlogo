@@ -42,9 +42,8 @@
                   v-for="network in networks"
                   :key="network.id"
                   :url="url"
-                  title="PlainLogo"
-                  description="PlainLogo"
-                  quote="Created by PlainLogo."
+                  :title="sharingMessage"
+                  :description="sharingMessage"
                   hashtags="joytocode,plainlogo"
                   twitter-user="joytocode"
                   inline-template
@@ -127,7 +126,9 @@
         @params-change="paramsListener"
       />
     </v-container>
+    <!-- show about at the same time with editor -->
     <div
+      v-if="resources && initialParams"
       id="about"
       class="section-container"
     >
@@ -145,8 +146,10 @@ import { encodeQuery, decodeQuery } from '~/utils/params'
 import networks from '~/utils/socials'
 
 export default {
-  head: {
-    title: 'PlainLogo'
+  head () {
+    return {
+      title: this.title
+    }
   },
   components: {
     'showcase': require('~/components/showcase').default,
@@ -158,6 +161,7 @@ export default {
   },
   data () {
     return {
+      title: 'PlainLogo',
       loading: true,
       loadError: null,
       resources: null,
@@ -171,6 +175,12 @@ export default {
   computed: {
     url () {
       return `https://plainlogo.joytocode.com${this.$route.fullPath}`
+    },
+    name () {
+      return this.params ? this.params.texts.map(({ value }) => value).join('') : null
+    },
+    sharingMessage () {
+      return `Logo '${this.name}' created by PlainLogo`
     }
   },
   created () {
@@ -210,6 +220,7 @@ export default {
     },
     updateParams ({ params, first }) {
       this.params = { ...params }
+      this.updateTitle()
       const querystring = this.getQueryString()
       const nextQuerystring = qs.stringify(encodeQuery(params))
       if (querystring === nextQuerystring) {
@@ -220,6 +231,10 @@ export default {
       } else {
         this.$router.push(`${this.$route.path}?${nextQuerystring}`)
       }
+    },
+    updateTitle () {
+      this.title = `PlainLogo${this.name ? ` - ${this.name}` : ''}`
+      this.$emit('updateHead')
     },
     getQueryString () {
       return this.$route.fullPath.substring(this.$route.path.length + 1)

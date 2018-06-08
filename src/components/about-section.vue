@@ -9,7 +9,7 @@
         href="#top"
         class="secondary--text text--darken-2"
       >Examples</a>). The result can be downloaded as SVG or PNG image for editing later. We use only free resources (such as Google Fonts) so that you can use the logo anywhere, whether commercial or personal. The application works on the most recent versions of Chrome, Firefox, Safari and Edge.</p>
-      <p>If you want a quick or first design of your logo, then try it out.</p>
+      <p>If you want a quick or first design of your logo, then definitely try it out.</p>
       <div class="display-1 mb-3">Usage</div>
       <div class="headline mb-2">Options</div>
       <p>You can set the following options for a logo:</p>
